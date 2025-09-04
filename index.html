@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar-like QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #qrcode {
+            margin-top: 30px;
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Aadhaar-like QR Code Generator</h2>
+    <label for="name">Name:</label>
+    <input type="text" id="name" placeholder="Enter Full Name">
+
+    <label for="uid">Aadhaar No. (last 4 digits):</label>
+    <input type="text" id="uid" placeholder="XXXX-XXXX-XXXX">
+
+    <label for="dob">Date of Birth (YYYY-MM-DD):</label>
+    <input type="text" id="dob" placeholder="YYYY-MM-DD">
+
+    <label for="gender">Gender (M/F/T):</label>
+    <input type="text" id="gender" placeholder="M, F or T">
+    
+    <button onclick="generateAadhaarLikeQRCode()">Generate QR Code</button>
+    <div id="qrcode"></div>
+</div>
+
+<script>
+    function generateAadhaarLikeQRCode() {
+        // Get input values
+        const name = document.getElementById('name').value;
+        const uid = document.getElementById('uid').value;
+        const dob = document.getElementById('dob').value;
+        const gender = document.getElementById('gender').value;
+        const qrcodeContainer = document.getElementById('qrcode');
+
+        // Check if all fields are filled
+        if (name && uid && dob && gender) {
+            // Create a simple XML-like string.
+            // Note: This is a simplified representation, not the actual encrypted format.
+            const xmlData = `<A UID="${uid}" NAME="${name}" DOB="${dob}" GENDER="${gender}"/>`;
+            
+            // Clear any previous QR code
+            qrcodeContainer.innerHTML = '';
+
+            // Generate the QR code from the XML string
+            new QRCode(qrcodeContainer, {
+                text: xmlData,
+                width: 250,
+                height: 250,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // Show the QR code container
+            qrcodeContainer.style.display = 'block';
+
+        } else {
+            // If any field is empty, show an alert
+            qrcodeContainer.innerHTML = '';
+            qrcodeContainer.style.display = 'none';
+            alert('Please fill in all the details to generate the QR code.');
+        }
+    }
+</script>
+
+</body>
+</html>
